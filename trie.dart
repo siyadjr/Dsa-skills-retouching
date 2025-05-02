@@ -1,60 +1,49 @@
-void main() {
-  TrieNode root = TrieNode();
-  root.insert('Amal');
-  root.insert('Siyad');
-  root.insert('Sribin ');
-  root.insert('Riya');
-  root.insert('Hina');
-  root.insert('Chandana');
-  root.printTrie();
-  final result = root.searchTheWord('Amal');
-  print('the result is $result');
-}
-
-class Node {
-  Map<String, Node> children = {};
-  bool endword = false;
-}
+void main() {}
 
 class TrieNode {
-  Node root = Node();
+  Map<String, TrieNode> childrens = {};
+  bool isEndOfWord = false;
+}
+
+class Trie {
+  TrieNode root = TrieNode();
   void insert(String word) {
-    Node current = root;
+    TrieNode node = root;
     for (int i = 0; i < word.length; i++) {
-      String letter = word[i];
-      if (!current.children.containsKey(letter)) {
-        current.children[letter] = Node();
-      }
-      current = current.children[letter]!;
+      String char = word[i];
+      
+      node.childrens.putIfAbsent(char, () => TrieNode());
+      node = node.childrens[char]!;
     }
-    current.endword = true;
+    node.isEndOfWord = true;
   }
 
-  printTrie() {
-    displayHelper(root, '');
-  }
-
-  displayHelper(Node node, String word) {
-    if (node.endword) {
-      print(word);
-    }
-    node.children
-        .forEach((char, childNode) => displayHelper(childNode, word + char));
-  }
-
-  searchTheWord(String word) {
-    Node current = root;
+  List<String> autoSuggestion(
+    String word,
+  ) {
+    List<String> result = [];
+    TrieNode node = root;
     for (int i = 0; i < word.length; i++) {
-      String letter = word[i];
-      if (!current.children.containsKey(letter)) {
-        return false;
+      String char = word[i];
+      if (!root.childrens.containsKey(char)) {
+        return result;
+      } else {
+        node = node.childrens[char]!;
+        if (node.isEndOfWord) {
+          result.add(node.childrens.entries.first.key);
+        }
       }
-      current = current.children[letter]!;
     }
-    if (current.endword) {
-      return word;
-    } else {
-      return 'There is no word like that you idiot!';
+
+    return result;
+  }
+
+  void dfs(List<String> result, String current, TrieNode node) {
+    if (node.isEndOfWord) {
+      result.add(current);
+    }
+    for (var entry in node.childrens.entries) {
+      dfs(result, current + entry.key, entry.value);
     }
   }
 }

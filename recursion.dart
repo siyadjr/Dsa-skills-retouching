@@ -4,6 +4,7 @@ void main() {
   // print('The result is $sum');
   String str = 'Naruto Uzumaki';
   print('The result is ${reverseString(str)}');
+  print(stringReverse('dayis'));
 }
 
 int sumOfArray(List<int> nums, int length) {
@@ -17,5 +18,12 @@ String reverseString(String str) {
   if (str.isEmpty) {
     return '';
   }
-  return reverseString((str.substring(1) ))+str[0];
+  return reverseString((str.substring(1))) + str[0];
+}
+
+String stringReverse(String str) {
+  if (str.isEmpty) {
+    return '';
+  }
+  return stringReverse((str.substring(1))) + str[0];
 }

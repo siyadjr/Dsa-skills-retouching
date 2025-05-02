@@ -1,90 +1,80 @@
 void main() {
-  // Example of using the MaxHeap class
-  MaxHeap heap = MaxHeap([3, 9, 2, 1, 4, 5]);
-  print(heap.heapArray); // Output: [9, 4, 5, 1, 3, 2]
-  
-  List<int> array = [8, 3, 5, 6, 233, 5, 3, 23, 45];
-  heap.insert(10);
-  print(heap.heapArray); // Output: [10, 9, 5, 1, 4, 2, 3]
-  
-  print("Original array: $array");
-  var sortedArray = heapSort(array);
-  print("Sorted array: $sortedArray");
+  MaxHeap heap = MaxHeap();
+  heap.insert(4);
+  heap.insert(6);
+  heap.insert(5);
+  heap.insert(3);
+  heap.insert(7);
+  heap.preOrder(0);
 }
 
 class MaxHeap {
-  List<int> heapArray = [];
-
-  MaxHeap(List<int> initialArray) {
-    if (initialArray.isNotEmpty) {
-      heapify(initialArray);
-    }
-  }
-
+  List<int> heap = [];
   void insert(int value) {
-    heapArray.add(value);
-    shiftUp(heapArray.length - 1);
+    heap.add(value);
+    shiftUp(heap.length - 1);
   }
 
-  void heapify(List<int> array) {
-    heapArray = List<int>.from(array);
-    for (int i = (heapArray.length - 1) ~/ 2; i >= 0; i--) {
-      shiftDown(i);
-    }
-  }
-
-  void shiftUp(int index) {
-    while (index > 0 && heapArray[index] > heapArray[getParent(index)]) {
-      swap(index, getParent(index));
-      index = getParent(index);
+  shiftUp(int index) {
+    while (index > 0) {
+      int parentindex = (index - 1) ~/ 2;
+      if (heap[index] > heap[parentindex]) {
+        swap(index, parentindex);
+        index = parentindex;
+      } else {
+        break;
+      }
     }
   }
 
   void shiftDown(int index) {
-    int left = leftChild(index);
-    int right = rightChild(index);
-    int size = heapArray.length;
+    int leftChild = 2 * index + 1; 
+    int rightChild = 2 * index + 2;
     int largest = index;
-    if (left < size && heapArray[left] > heapArray[largest]) {
-      largest = left;
+    if (leftChild < heap.length && heap[leftChild] > heap[largest]) {
+      largest = leftChild;
     }
-    if (right < size && heapArray[right] > heapArray[largest]) {
-      largest = right;
+    if (rightChild < heap.length && heap[rightChild] > heap[largest]) {
+      largest = rightChild;
     }
     if (largest != index) {
-      swap(largest, index);
+      swap(index, largest);
       shiftDown(largest);
     }
   }
 
-  void swap(int index1, int index2) {
-    int temp = heapArray[index1];
-    heapArray[index1] = heapArray[index2];
-    heapArray[index2] = temp;
+  int getMax() {
+    if (heap.isEmpty) {
+      throw Exception('no data');
+    }
+    return heap[0];
   }
 
-  int? extractMax() {
-    if (heapArray.isEmpty) {
-      return null;
+  int removeMax() {
+    if (heap.isEmpty) {
+      throw Exception('no data');
     }
-    int max = heapArray[0];
-    heapArray[0] = heapArray.removeLast();  // Swap the root with the last element
-    if (heapArray.isNotEmpty) {
-      shiftDown(0);  // Restore heap property after removing the max
+    if (heap.length == 1) {
+      return heap.removeLast();
     }
+    int max = heap[0];
+    heap[0] = heap.removeLast();
+    shiftDown(0);
     return max;
   }
 
-  int getParent(int value) => (value - 1) ~/ 2;
-  int leftChild(int value) => 2 * value + 1;
-  int rightChild(int value) => 2 * value + 2;
-}
-
-List<int> heapSort(List<int> array) {
-  MaxHeap heap = MaxHeap(array);
-  List<int> sortedArray = [];
-  while (heap.heapArray.isNotEmpty) {
-    sortedArray.add(heap.extractMax()!);
+  void swap(int i, int j) {
+    int temp = heap[i];
+    heap[i] = heap[j];
+    heap[j] = temp;
   }
-  return sortedArray;
+
+  void preOrder(int index) {
+    if (index >= heap.length) {
+      return;
+    }
+    print(heap[index]);
+    preOrder(index * 2 + 1);
+    preOrder(index * 2 + 2);
+  }
 }

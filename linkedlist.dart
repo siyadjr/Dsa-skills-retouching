@@ -1,31 +1,33 @@
-void main() {
-  LinkedList linkedList = LinkedList();
-  List<int> array = [2, 3, 4, 5, 3, 54, 243];
+import 'stack.dart';
 
-  linkedList.append(5);
-  linkedList.append(65);
-  linkedList.append(42);
-  linkedList.prepend(4);
-  linkedList.arrayToLinkedList(array);
-  linkedList.insertAtSpecificPosition(3, 100);
-  linkedList.deleteNodeByValue(42);
-  linkedList.printList();
+void main() {
+  LinkedList list = LinkedList();
+  list.append(4);
+  list.append(5);
+  list.append(96);
+  list.prepend(7);
+  list.printList();
+  list.deleteNode(7);
+  print('');
+  list.printList();
+  print('');
+  list.printReverse();
+
+
 }
 
 class Node {
   int value;
-  Node? next;
-
   Node(this.value);
+  Node? next;
 }
 
 class LinkedList {
   Node? head;
-
-  // Append to end
   void append(int value) {
     if (head == null) {
       head = Node(value);
+      return;
     } else {
       Node? current = head;
       while (current!.next != null) {
@@ -35,49 +37,19 @@ class LinkedList {
     }
   }
 
-  // Prepend to beginning (Fixed Typo)
   void prepend(int value) {
-    Node newNode = Node(value);
-    newNode.next = head;
-    head = newNode;
-  }
-
-  // Insert at a specific position (Fixed logic)
-  void insertAtSpecificPosition(int position, int value) {
-    if (position == 0) {
-      prepend(value);
-      return;
-    }
-
-    Node? current = head;
-    int count = 0;
-
-    while (current != null && count < position - 1) {
-      current = current.next;
-      count++;
-    }
-
-    if (current == null) {
-      print('Position out of bounds');
-      return;
-    }
-
-    Node newNode = Node(value);
-    newNode.next = current.next;
-    current.next = newNode;
-  }
-
-  // Convert an array to a linked list
-  void arrayToLinkedList(List<int> array) {
-    for (int value in array) {
-      append(value);
+    if (head == null) {
+      head = Node(value);
+    } else {
+      Node newNode = Node(value);
+      newNode.next = head;
+      head = newNode;
     }
   }
 
-  // Print the linked list
   void printList() {
     if (head == null) {
-      print('The head is null, so no data');
+      return;
     } else {
       Node? current = head;
       while (current != null) {
@@ -87,22 +59,41 @@ class LinkedList {
     }
   }
 
-  void deleteNodeByValue(int value) {
+  void deleteNode(int value) {
+    Node? prev;
+    Node? next;
     if (head == null) {
-      print('no data');
       return;
     } else if (head!.value == value) {
-      head = head!.next;
-      return;
-    }
-    Node? current = head;
-    while (current!.next != null && current.next!.value != value) {
-      current = current.next;
-    }
-    if (current.next != null) {
-      current.next = current.next!.next;
+      head = head?.next;
     } else {
-      print('No ellementws');
+      Node? current = head;
+      while (current != null) {
+        if (current.next?.value == value) {
+          prev = current;
+          next = current.next?.next;
+          current.next = next;
+          break;
+        }
+        current = current.next;
+      }
+    }
+  }
+
+  printReverse() {
+    if (head == null) {
+      print('No data available');
+      return;
+    } else {
+      Node? current = head;
+      List<int> stack = [];
+      while (current != null) {
+        stack.add(current.value);
+        current = current.next;
+      }
+      for (int i = stack.length - 1; i >= 0; i--) {
+        print(stack[i]);
+      }
     }
   }
 }

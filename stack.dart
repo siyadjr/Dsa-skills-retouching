@@ -1,30 +1,27 @@
-import 'dart:developer';
-
 void main() {
   Stack stack = Stack();
-  stack.push(3);
-  stack.push(4);
-  stack.push(6);
-  stack.push(9);
-  log('the last element is ${stack.pop()}');
-  stack.printStack();
+  String str = 'dayis';
+  stack.reverseString(str);
 }
 
 class Stack {
-  List<int> stack = [];
-  void push(int value) {
-    stack.add(value);
-  }
-
-  int? pop() {
-    if (stack.isNotEmpty) {
-      return stack.removeLast();
-    } else {
-      return null;
+  List<String> stack = [];
+  void reverseString(String str) {
+    for (int i = 0; i < str.length; i++) {
+      enque(str[i]);
     }
+    String result = '';
+    while (stack.isNotEmpty) {
+      result += deque();
+    }
+    print(result);
   }
 
-  void printStack() {
-    log(stack.toString());
+  void enque(String str) {
+    stack.add(str);
+  }
+
+  String deque() {
+    return stack.removeLast();
   }
 }
